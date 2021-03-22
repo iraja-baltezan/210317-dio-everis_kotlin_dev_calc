@@ -22,7 +22,11 @@ Transcrição do enunciado da propósta de exercício:
 >
 >**Use sua criatividade!** Adicione outras operações, tais como: fatorial, porcentagem, potenciação e etc.
 
+Author: [Irajá](iraja.baltezan@gmail.com)
+
  */
+
+import kotlin.math.pow
 
 const val OPERADOR_NULO = 0
 const val OPERADOR_FINAL = 99
@@ -31,6 +35,9 @@ const val OPERADOR_ADICAO = 1
 const val OPERADOR_SUBTRACAO = 2
 const val OPERADOR_MULTIPLICACAO = 3
 const val OPERADOR_DIVISAO = 4
+const val OPERADOR_PERCENTO = 5
+const val OPERADOR_POTENCIACAO = 6
+const val OPERADOR_RADICIACAO = 7
 
 
 fun main() {
@@ -91,6 +98,9 @@ fun main() {
                     |$OPERADOR_SUBTRACAO) $operando1 - $operando2
                     |$OPERADOR_MULTIPLICACAO) $operando1 × $operando2
                     |$OPERADOR_DIVISAO) $operando1 ÷ $operando2
+                    |$OPERADOR_PERCENTO) $operando1 % de $operando2
+                    |$OPERADOR_POTENCIACAO) elevar $operando1 a potência $operando2
+                    |$OPERADOR_RADICIACAO) raiz $operando1 de $operando2
                     |R para reiniciar ou S para sair: 
                     """.trimMargin())
                 leitura = readLine()
@@ -120,6 +130,7 @@ fun main() {
 
 fun clearConsole() { for(i in 0..30) println("") }
 
+
 fun String?.isFloat():Boolean {
     if (this == null) return false
     try { this.toFloat() }
@@ -142,9 +153,28 @@ fun calcular(operando1:Float, operando2: Float, operador: Int ):String {
         OPERADOR_SUBTRACAO     -> resultado += operando1 - operando2
         OPERADOR_MULTIPLICACAO -> resultado += operando1 * operando2
         OPERADOR_DIVISAO       -> resultado += if (operando2==0.0f) "divisão por zero" else (operando1 / operando2)
+        OPERADOR_PERCENTO      -> resultado += operando1 * (operando2 / 100)
+        OPERADOR_POTENCIACAO   -> resultado += calcularPotencia(operando1, operando2)
+        OPERADOR_RADICIACAO    -> resultado += calcularRaiz(operando1, operando2)
         else -> resultado += "Operação desconhecida"
     }
 
     resultado += "\n" + "-".repeat(80)
     return resultado
+}
+
+fun calcularPotencia(base:Float, expoente:Float):String {
+    val resultado = (base.pow(expoente))
+    if (resultado.isFinite()) 
+        return resultado.toString()
+    else if (resultado < 0)
+        return "número muito pequeno, menor que ${Double.MIN_VALUE}"
+    else
+        return "número muito grande, maior que ${Double.MAX_VALUE}"
+}
+
+fun calcularRaiz(indice:Float, radicando:Float):String {
+    return radicando.toDouble().pow(
+            1.0 / (indice.toDouble()) 
+        ).toFloat().toString()
 }
